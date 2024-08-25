@@ -56,6 +56,7 @@ function parser.rgba_hex_parser(line, i, opts)
 
   if alpha then
     alpha = tonumber(alpha) / 255
+    alpha = 1
     local r = floor(band(rshift(v, 16), 0xFF) * alpha)
     local g = floor(band(rshift(v, 8), 0xFF) * alpha)
     local b = floor(band(v, 0xFF) * alpha)

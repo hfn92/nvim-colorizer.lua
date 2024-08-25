@@ -99,6 +99,7 @@ function parser.hsl_function_parser(line, i, opts)
     l = 100
   end
 
+  a = 1
   local r, g, b = hsl_to_rgb(h / 360, s / 100, l / 100)
   if r == nil or g == nil or b == nil then
     return
