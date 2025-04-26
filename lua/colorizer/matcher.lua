@@ -35,15 +35,8 @@ function matcher.compile(matchers, matchers_trie)
   local function parse_fn(line, i, buf)
     -- prefix #
     if matchers.rgba_hex_parser then
-      if line:byte(i) == B_HASH then
+      if line:byte(i) == B_HASH or line:byte(i) == DOLLAR_HASH then
         return rgba_hex_parser(line, i, matchers.rgba_hex_parser)
-      end
-    end
-
-    -- prefix $, SASS Colour names
-    if matchers.sass_name_parser then
-      if line:byte(i) == DOLLAR_HASH then
-        return sass_name_parser(line, i, buf)
       end
     end
 
