@@ -10,10 +10,12 @@ local hsl_function_parser = require "colorizer.parser.hsl"
 
 local argb_hex_parser = require "colorizer.parser.argb_hex"
 local rgba_hex_parser = require "colorizer.parser.rgba_hex"
+local hdr_parser = require "colorizer.parser.hdr"
 
 local sass_name_parser = require("colorizer.sass").name_parser
 
 local B_HASH, DOLLAR_HASH = ("#"):byte(), ("$"):byte()
+local PAR_OPEN = ("("):byte()
 
 local parser = {
   ["_0x"] = argb_hex_parser,
@@ -36,7 +38,18 @@ function matcher.compile(matchers, matchers_trie)
     -- prefix #
     if matchers.rgba_hex_parser then
       if line:byte(i) == B_HASH or line:byte(i) == DOLLAR_HASH then
-        return rgba_hex_parser(line, i, matchers.rgba_hex_parser)
+        if (i + 1) <= #line and line:byte(i + 1) == PAR_OPEN then
+          return hdr_parser(line, i, matchers.rgba_hex_parser)
+        else
+          return rgba_hex_parser(line, i, matchers.rgba_hex_parser)
+        end
+      end
+    end
+
+    -- prefix $, SASS Colour names
+    if matchers.sass_name_parser then
+      if line:byte(i) == DOLLAR_HASH then
+        return sass_name_parser(line, i, buf)
       end
     end
 
